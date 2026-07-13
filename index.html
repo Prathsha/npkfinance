@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>For Nethra | Finance Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="app-header">
+        <a class="brand" href="#overview" aria-label="For Nethra overview">
+          <span class="brand-mark">N</span>
+          <span>
+            <strong>For Nethra</strong>
+            <small>Personal finance studio</small>
+          </span>
+        </a>
+
+        <nav class="top-nav" aria-label="Finance pages">
+          <a href="#overview" data-route="overview">Overview</a>
+          <a href="#income" data-route="income">Income</a>
+          <a href="#budget" data-route="budget">Budget</a>
+          <a href="#investing" data-route="investing">Investing</a>
+          <a href="#networth" data-route="networth">Net Worth</a>
+        </nav>
+
+        <div class="header-actions">
+          <button class="icon-button" id="resetDemo" title="Reset Nethra's dashboard" aria-label="Reset Nethra's dashboard">↺</button>
+          <button class="primary" id="saveSnapshot">Save</button>
+        </div>
+      </header>
+
+      <main>
+        <section class="page active" id="page-overview" data-page="overview">
+          <div class="page-hero market-hero">
+            <div>
+              <p class="eyebrow">Overview</p>
+              <h1>Hi Nethra, your money picture is organized here.</h1>
+              <p class="hero-text">This page summarizes the income, budget, available investing money, portfolio value, and net worth information stored for Nethra.</p>
+            </div>
+            <div class="hero-ledger">
+              <span>Projected monthly surplus</span>
+              <strong id="overviewSurplus">$0</strong>
+              <small id="overviewSurplusHint">After planned spending and goals</small>
+            </div>
+          </div>
+
+          <div class="metric-grid">
+            <article class="metric">
+              <span class="metric-label">Take-home</span>
+              <strong id="overviewNet">$0</strong>
+              <small>Estimated monthly income after taxes</small>
+            </article>
+            <article class="metric">
+              <span class="metric-label">Budgeted</span>
+              <strong id="overviewBudget">$0</strong>
+              <small id="overviewBudgetPercent">0% of take-home</small>
+            </article>
+            <article class="metric">
+              <span class="metric-label">Investable</span>
+              <strong id="overviewInvestable">$0</strong>
+              <small>From Nethra's monthly investing budget</small>
+            </article>
+            <article class="metric">
+              <span class="metric-label">Net worth</span>
+              <strong id="overviewNetWorth">$0</strong>
+              <small>Saved cash plus invested value</small>
+            </article>
+          </div>
+
+          <div class="content-grid two">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Cash flow</p>
+                  <h2>Monthly plan</h2>
+                </div>
+                <span class="badge" id="overviewStatus">On track</span>
+              </div>
+              <canvas id="cashFlowChart" height="280" aria-label="Monthly cash flow chart"></canvas>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Allocation</p>
+                  <h2>Budget mix</h2>
+                </div>
+              </div>
+              <canvas id="budgetMixChart" height="280" aria-label="Budget allocation chart"></canvas>
+              <div class="legend" id="budgetMixLegend"></div>
+            </article>
+          </div>
+
+          <div class="content-grid three">
+            <article class="insight-card">
+              <span>Income</span>
+              <strong id="overviewPaycheck">$0</strong>
+              <p>Nethra's estimated weekly paycheck based on stored income info.</p>
+            </article>
+            <article class="insight-card">
+              <span>Budget</span>
+              <strong id="overviewNeedsWants">0 / 0</strong>
+              <p>Needs and wants are separated so overspending is easier to catch.</p>
+            </article>
+            <article class="insight-card">
+              <span>Investing</span>
+              <strong id="overviewPortfolioReturn">0%</strong>
+              <p>Portfolio return updates from the latest prices stored or fetched.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="page" id="page-income" data-page="income">
+          <div class="page-title">
+            <div>
+              <p class="eyebrow">Income</p>
+              <h1>Nethra's stored income profile</h1>
+              <p>Change weekly pay, state, deductions, and savings cash here. The rest of the app recalculates from this stored profile.</p>
+            </div>
+          </div>
+
+          <div class="content-grid income-grid">
+            <form class="panel form-grid" id="incomeForm">
+              <label>
+                Weekly pay
+                <input type="number" name="weeklyPay" min="0" step="25" />
+              </label>
+              <label>
+                State
+                <select name="state">
+                  <option value="NY">New York</option>
+                  <option value="CA">California</option>
+                  <option value="TX">Texas</option>
+                  <option value="FL">Florida</option>
+                  <option value="WA">Washington</option>
+                </select>
+              </label>
+              <label>
+                Filing status
+                <select name="filing">
+                  <option value="single">Single</option>
+                  <option value="married">Married filing jointly</option>
+                </select>
+              </label>
+              <label>
+                Pay frequency
+                <select name="frequency">
+                  <option value="weekly">Weekly</option>
+                </select>
+              </label>
+              <label>
+                Retirement contribution
+                <input type="number" name="retirement" min="0" step="250" />
+              </label>
+              <label>
+                Health deduction
+                <input type="number" name="health" min="0" step="100" />
+              </label>
+              <label>
+                Current cash savings
+                <input type="number" name="cashSavings" min="0" step="100" />
+              </label>
+              <label>
+                Emergency fund target
+                <input type="number" name="emergencyTarget" min="0" step="100" />
+              </label>
+            </form>
+
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Estimate</p>
+                  <h2>Paycheck breakdown</h2>
+                </div>
+              </div>
+              <dl class="results" id="incomeResults"></dl>
+              <p class="fine-print">Tax assumptions last updated July 9, 2026. Actual taxes depend on Nethra's full circumstances, credits, local taxes, and withholding choices.</p>
+            </article>
+          </div>
+
+          <div class="content-grid three">
+            <article class="insight-card">
+              <span>Federal estimate</span>
+              <strong id="incomeFederal">$0</strong>
+              <p>Simplified planning estimate separated from the interface logic.</p>
+            </article>
+            <article class="insight-card">
+              <span>Payroll estimate</span>
+              <strong id="incomePayroll">$0</strong>
+              <p>Social Security and Medicare-style payroll assumption.</p>
+            </article>
+            <article class="insight-card">
+              <span>Emergency coverage</span>
+              <strong id="incomeEmergencyMonths">0 months</strong>
+              <p>Cash savings divided by planned monthly spending.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="page" id="page-budget" data-page="budget">
+          <div class="page-title action-title">
+            <div>
+              <p class="eyebrow">Budget</p>
+              <h1>Nethra's monthly budget control room</h1>
+              <p>Edit planned and actual spending, see each category as a percent of take-home pay, and watch remaining money update.</p>
+            </div>
+            <button class="secondary" id="addCategory">Add category</button>
+          </div>
+
+          <div class="metric-grid">
+            <article class="metric">
+              <span class="metric-label">Planned</span>
+              <strong id="budgetPlanned">$0</strong>
+              <small id="budgetPlannedPct">0% of take-home</small>
+            </article>
+            <article class="metric">
+              <span class="metric-label">Actual</span>
+              <strong id="budgetActual">$0</strong>
+              <small id="budgetActualPct">0% of take-home</small>
+            </article>
+            <article class="metric">
+              <span class="metric-label">Remaining</span>
+              <strong id="budgetRemaining">$0</strong>
+              <small>Estimated after planned budget</small>
+            </article>
+            <article class="metric">
+              <span class="metric-label">Goal money</span>
+              <strong id="budgetGoals">$0</strong>
+              <small>Savings and investing categories</small>
+            </article>
+          </div>
+
+          <div class="content-grid budget-grid">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Categories</p>
+                  <h2>Edit budget</h2>
+                </div>
+                <span class="badge" id="budgetHealth">Healthy</span>
+              </div>
+              <div class="budget-list" id="budgetList"></div>
+            </article>
+
+            <aside class="panel sticky-panel">
+              <p class="eyebrow">Percentages</p>
+              <h2>Where Nethra's take-home goes</h2>
+              <canvas id="budgetPercentChart" height="260" aria-label="Budget percentage chart"></canvas>
+              <div class="progress-stack" id="budgetStack"></div>
+              <button class="secondary full" id="copyMonth">Copy this month</button>
+              <button class="ghost full" id="resetBudget">Reset budget</button>
+            </aside>
+          </div>
+        </section>
+
+        <section class="page" id="page-investing" data-page="investing">
+          <div class="page-title">
+            <div>
+              <p class="eyebrow">Investing</p>
+              <h1>Nethra's stock research and portfolio planner</h1>
+              <p>Look up a ticker, switch time ranges, model what might happen, and add shares to Nethra's portfolio using the investable cash from her budget.</p>
+            </div>
+          </div>
+
+          <div class="content-grid invest-grid">
+            <article class="panel">
+              <div class="lookup-row">
+                <label>
+                  Look at stock
+                  <span class="search-box">
+                    <input type="text" id="tickerInput" value="AAPL" maxlength="40" autocomplete="off" />
+                    <div class="suggestions" id="stockSuggestions" hidden></div>
+                  </span>
+                </label>
+                <button class="primary" id="lookupStock">Search</button>
+              </div>
+
+              <div class="stock-header">
+                <div>
+                  <p class="eyebrow">Market data</p>
+                  <h2 id="stockName">Apple Inc.</h2>
+                  <p id="stockMeta">AAPL · delayed market data</p>
+                </div>
+                <div class="price-tile">
+                  <span id="stockPrice">$0</span>
+                  <strong id="stockChange">0%</strong>
+                </div>
+              </div>
+
+              <div class="range-tabs" id="rangeTabs">
+                <button data-range="1D">1D</button>
+                <button data-range="1W">1W</button>
+                <button data-range="1M">1M</button>
+                <button data-range="1Y" class="active">1Y</button>
+              </div>
+
+              <div class="chart-wrap">
+                <canvas id="stockChart" height="240" aria-label="Stock performance chart"></canvas>
+                <div class="chart-tooltip" id="stockTooltip" hidden></div>
+              </div>
+              <p class="fine-print" id="marketSource">Uses the local market-data API. If live/delayed data is unavailable, no dummy prices are shown.</p>
+            </article>
+
+            <aside class="panel">
+              <p class="eyebrow">Invest</p>
+              <h2>Add to Nethra's portfolio</h2>
+              <div class="available-cash">
+                <span>Available this month</span>
+                <strong id="availableInvestCash">$0</strong>
+              </div>
+              <label>
+                Trade amount
+                <input type="number" id="investAmount" min="0" step="25" value="250" />
+              </label>
+              <div class="projection-grid">
+                <div>
+                  <span>Estimated shares</span>
+                  <strong id="estimatedShares">0</strong>
+                </div>
+                <div>
+                  <span>1-year scenario</span>
+                  <strong id="scenarioValue">$0</strong>
+                </div>
+              </div>
+              <label>
+                Scenario return
+                <input type="range" id="scenarioReturn" min="-40" max="60" value="8" />
+              </label>
+              <p class="slider-value"><span id="scenarioReturnLabel">8%</span> projected return for learning only</p>
+              <div class="trade-actions">
+                <button class="primary" id="addInvestment">Buy</button>
+                <button class="secondary" id="sellInvestment">Sell</button>
+              </div>
+              <p class="fine-print">Buying subtracts from available investing cash. Selling adds that money back for the month.</p>
+            </aside>
+          </div>
+
+          <div class="content-grid three">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Portfolio</p>
+                  <h2>Nethra's holdings</h2>
+                </div>
+              </div>
+              <div class="holding-list" id="holdingList"></div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Research ideas</p>
+                  <h2>Beauty stocks</h2>
+                </div>
+              </div>
+              <div class="watchlist" id="beautyWatchlist"></div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Last month</p>
+                  <h2>General stocks up most</h2>
+                </div>
+              </div>
+              <div class="watchlist" id="moverWatchlist"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="page" id="page-networth" data-page="networth">
+          <div class="page-hero networth-hero">
+            <div>
+              <p class="eyebrow">Net Worth</p>
+              <h1>Nethra's saved plus invested money</h1>
+              <p class="hero-text">Net worth here is cash savings plus current portfolio value, updated from the stock prices stored in the investing page.</p>
+            </div>
+            <div class="hero-ledger">
+              <span>Total net worth</span>
+              <strong id="netWorthTotal">$0</strong>
+              <small id="netWorthChange">0% portfolio return</small>
+            </div>
+          </div>
+
+          <div class="content-grid two">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Composition</p>
+                  <h2>Cash and investments</h2>
+                </div>
+              </div>
+              <canvas id="netWorthChart" height="300" aria-label="Net worth composition chart"></canvas>
+              <div class="legend" id="netWorthLegend"></div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Trend</p>
+                  <h2>Estimated path</h2>
+                </div>
+              </div>
+              <canvas id="netWorthTrendChart" height="300" aria-label="Net worth trend chart"></canvas>
+              <p class="fine-print">Trend combines current savings, current invested value, and Nethra's stored monthly savings and investing plan.</p>
+            </article>
+          </div>
+
+          <div class="metric-grid">
+            <article class="metric">
+              <span class="metric-label">Cash saved</span>
+              <strong id="netWorthCash">$0</strong>
+              <small>Stored on the Income page</small>
+            </article>
+            <article class="metric">
+              <span class="metric-label">Invested value</span>
+              <strong id="netWorthInvested">$0</strong>
+              <small>Based on holdings and current prices</small>
+            </article>
+            <article class="metric">
+              <span class="metric-label">Invested cost</span>
+              <strong id="netWorthCost">$0</strong>
+              <small>Amount Nethra put in</small>
+            </article>
+            <article class="metric">
+              <span class="metric-label">Unrealized gain</span>
+              <strong id="netWorthGain">$0</strong>
+              <small id="netWorthGainPct">0%</small>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <template id="budgetItemTemplate">
+      <div class="budget-item">
+        <div class="category-main">
+          <span class="category-dot"></span>
+          <div>
+            <strong class="category-name"></strong>
+            <small class="category-type"></small>
+          </div>
+        </div>
+        <label>
+          Planned
+          <input class="planned-input" type="number" min="0" step="25" />
+        </label>
+        <label>
+          Actual
+          <input class="actual-input" type="number" min="0" step="25" />
+        </label>
+        <span class="percent-pill"></span>
+        <span class="remaining-pill"></span>
+        <button class="mini-danger remove-budget" type="button">Remove</button>
+      </div>
+    </template>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
